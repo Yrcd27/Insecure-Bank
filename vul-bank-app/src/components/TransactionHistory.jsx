@@ -1,0 +1,144 @@
+import React, { useState, useEffect, useCallback } from 'react';
+
+const TransactionHistory = ({ userId }) => {
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setLoading(true);
+      // VULNERABLE: Direct user ID access - IDOR vulnerability
+      const response = await fetch(`http://localhost:5000/api/transactions/${userId}`, {
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setTransactions(data);
+      } else {
+        setError('Failed to fetch transactions');
+      }
+    } catch {
+      setError('Network error occurred');
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getTransactionIcon = (type) => {
+    switch (type) {
+      case 'deposit':
+        return '⬇️';
+      case 'withdraw':
+        return '⬆️';
+      case 'transfer':
+        return '💸';
+      default:
+        return '💰';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">Transaction History</h2>
+        <button
+          onClick={fetchTransactions}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+        >
+          Refresh
+        </button>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* IDOR Vulnerability Demo */}
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <h3 className="font-semibold text-red-800 mb-2">🚨 IDOR Vulnerability Demo</h3>
+        <p className="text-sm text-red-700 mb-3">
+          Try changing the URL to see other users' transactions:
+        </p>
+        <div className="text-sm text-red-700 bg-red-100 p-2 rounded font-mono">
+          /api/transactions/1, /api/transactions/2, /api/transactions/3, etc.
+        </div>
+        <p className="text-sm text-red-700 mt-2">
+          This demonstrates Insecure Direct Object Reference (IDOR) where you can access other users' data.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        {transactions.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <span className="text-4xl block mb-2">📋</span>
+            No transactions found
+          </div>
+        ) : (
+          transactions.map((transaction) => (
+            <div key={transaction.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="text-2xl">
+                    {getTransactionIcon(transaction.type)}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 capitalize">
+                      {transaction.type}
+                      {transaction.recipient_username && ` to ${transaction.recipient_username}`}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {formatDate(transaction.created_at)}
+                    </p>
+                    {transaction.description && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        {transaction.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className={`text-lg font-bold ${
+                    transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    ID: {transaction.id}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default TransactionHistory;
