@@ -5,10 +5,6 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchAllUsers();
-  }, [fetchAllUsers]);
-
   const fetchAllUsers = useCallback(async () => {
     try {
       setLoading(true);
@@ -29,6 +25,10 @@ const AdminPanel = () => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchAllUsers();
+  }, [fetchAllUsers]);
 
   if (loading) {
     return (
