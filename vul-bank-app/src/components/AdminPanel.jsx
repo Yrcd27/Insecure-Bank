@@ -4,6 +4,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [deleteMessage, setDeleteMessage] = useState('');
 
   const fetchAllUsers = useCallback(async () => {
     try {
@@ -30,6 +31,34 @@ const AdminPanel = () => {
     fetchAllUsers();
   }, [fetchAllUsers]);
 
+  const handleDeleteUser = async (userId, username) => {
+    if (!window.confirm(`Are you sure you want to delete user "${username}"?`)) {
+      return;
+    }
+
+    try {
+      // VULNERABLE: No CSRF protection
+      const response = await fetch(`http://localhost:5000/api/admin/user/${userId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setDeleteMessage(`User "${username}" deleted successfully!`);
+        // Refresh user list
+        fetchAllUsers();
+        // Clear message after 3 seconds
+        setTimeout(() => setDeleteMessage(''), 3000);
+      } else {
+        setDeleteMessage(result.message || 'Delete failed');
+      }
+    } catch {
+      setDeleteMessage('Network error occurred');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -53,6 +82,16 @@ const AdminPanel = () => {
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}
+        </div>
+      )}
+
+      {deleteMessage && (
+        <div className={`px-4 py-3 rounded ${
+          deleteMessage.includes('successfully') 
+            ? 'bg-green-50 border border-green-200 text-green-700'
+            : 'bg-red-50 border border-red-200 text-red-700'
+        }`}>
+          {deleteMessage}
         </div>
       )}
 
@@ -137,7 +176,10 @@ const AdminPanel = () => {
                     <button className="text-green-600 hover:text-green-900 text-xs bg-green-100 px-2 py-1 rounded">
                       Edit
                     </button>
-                    <button className="text-red-600 hover:text-red-900 text-xs bg-red-100 px-2 py-1 rounded">
+                    <button 
+                      onClick={() => handleDeleteUser(user.id, user.username)}
+                      className="text-red-600 hover:text-red-900 text-xs bg-red-100 hover:bg-red-200 px-2 py-1 rounded transition duration-300"
+                    >
                       Delete
                     </button>
                   </td>

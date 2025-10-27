@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
+    rememberMe: false
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Load saved username on mount
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('rememberedUsername');
+    if (savedUsername) {
+      setFormData(prev => ({
+        ...prev,
+        username: savedUsername,
+        rememberMe: true
+      }));
+    }
+  }, []);
+
   const handleChange = (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     });
   };
 
@@ -27,6 +41,12 @@ const LoginPage = () => {
     const result = await login(formData.username, formData.password);
     
     if (result.success) {
+      // VULNERABLE: Storing username in localStorage (client-side storage)
+      if (formData.rememberMe) {
+        localStorage.setItem('rememberedUsername', formData.username);
+      } else {
+        localStorage.removeItem('rememberedUsername');
+      }
       navigate('/dashboard');
     } else {
       setError(result.message);
@@ -100,8 +120,10 @@ const LoginPage = () => {
               <div className="flex items-center">
                 <input
                   id="remember-me"
-                  name="remember-me"
+                  name="rememberMe"
                   type="checkbox"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
@@ -110,9 +132,9 @@ const LoginPage = () => {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-blue-300 hover:text-blue-200">
+                <Link to="/forgot-password" className="font-medium text-blue-300 hover:text-blue-200">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
 

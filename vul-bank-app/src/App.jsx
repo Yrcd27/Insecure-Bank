@@ -6,6 +6,7 @@ import LandingPage from './components/LandingPage';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import Dashboard from './components/Dashboard';
+import ForgotPassword from './components/ForgotPassword';
 import './App.css';
 
 function ProtectedRoute({ children }) {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route 
               path="/dashboard" 
               element={

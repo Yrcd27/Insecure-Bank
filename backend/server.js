@@ -337,6 +337,49 @@ app.put('/api/profile/:userId', async (req, res) => {
   }
 });
 
+// VULNERABLE: Delete user endpoint - No authorization check (IDOR)
+app.delete('/api/admin/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  
+  try {
+    // VULNERABLE: No admin check - anyone can delete users
+    // VULNERABLE: No CSRF protection
+    await db.execute('DELETE FROM users WHERE id = ?', [userId]);
+    
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Password reset request endpoint
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  
+  try {
+    // VULNERABLE: User enumeration - reveals if email exists
+    const [users] = await db.query(
+      'SELECT id, username FROM users WHERE email = ?',
+      [email]
+    );
+    
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'Email not found in our system' });
+    }
+    
+    // In a real app, send email with reset token
+    // For demo purposes, just return success
+    res.json({ 
+      success: true, 
+      message: 'Password reset instructions sent to your email',
+      // VULNERABLE: Exposing username
+      username: users[0].username
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Start server
 connectDB().then(() => {
   initializeDatabase().then(() => {
