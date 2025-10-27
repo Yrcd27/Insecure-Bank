@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
 import { User, AlertTriangle, Info } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 
 const ProfileManager = () => {
   const { user, updateUser } = useAuth();
@@ -10,6 +11,7 @@ const ProfileManager = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showUpdateConfirm, setShowUpdateConfirm] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,6 +22,10 @@ const ProfileManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowUpdateConfirm(true);
+  };
+
+  const executeUpdate = async () => {
     setLoading(true);
     setMessage('');
 
@@ -202,6 +208,18 @@ const ProfileManager = () => {
           This prevents stored XSS attacks where malicious scripts are permanently stored and executed for all users.
         </p>
       </div>
+
+      {/* Update Profile Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showUpdateConfirm}
+        onClose={() => setShowUpdateConfirm(false)}
+        onConfirm={executeUpdate}
+        title="Confirm Profile Update"
+        message="Are you sure you want to update your profile information?"
+        confirmText="Update"
+        cancelText="Cancel"
+        type="info"
+      />
     </div>
   );
 };

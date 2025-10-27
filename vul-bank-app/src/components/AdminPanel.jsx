@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AlertTriangle, User } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -15,6 +16,9 @@ const AdminPanel = () => {
     balance: ''
   });
   const [editMessage, setEditMessage] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showEditConfirm, setShowEditConfirm] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const fetchAllUsers = useCallback(async () => {
     try {
@@ -42,9 +46,14 @@ const AdminPanel = () => {
   }, [fetchAllUsers]);
 
   const handleDeleteUser = async (userId, username) => {
-    if (!window.confirm(`Are you sure you want to delete user "${username}"?`)) {
-      return;
-    }
+    setUserToDelete({ userId, username });
+    setShowDeleteConfirm(true);
+  };
+
+  const executeDelete = async () => {
+    if (!userToDelete) return;
+
+    const { userId, username } = userToDelete;
 
     try {
       // VULNERABLE: No CSRF protection
@@ -87,6 +96,10 @@ const AdminPanel = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    setShowEditConfirm(true);
+  };
+
+  const executeEdit = async () => {
     setEditMessage('');
 
     try {
@@ -462,6 +475,33 @@ const AdminPanel = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setUserToDelete(null);
+        }}
+        onConfirm={executeDelete}
+        title="Confirm Delete User"
+        message={`Are you sure you want to permanently delete user "${userToDelete?.username}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
+
+      {/* Edit Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showEditConfirm}
+        onClose={() => setShowEditConfirm(false)}
+        onConfirm={executeEdit}
+        title="Confirm Update User"
+        message={`Are you sure you want to update the profile information for user "${selectedUser?.username}"?`}
+        confirmText="Update"
+        cancelText="Cancel"
+        type="info"
+      />
     </div>
   );
 };

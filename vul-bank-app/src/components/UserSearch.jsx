@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
 import { Search as SearchIcon, User, AlertTriangle } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 
 const UserSearch = () => {
   const { user } = useAuth();
@@ -12,6 +13,7 @@ const UserSearch = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [transferAmount, setTransferAmount] = useState('');
   const [transferMessage, setTransferMessage] = useState('');
+  const [showTransferConfirm, setShowTransferConfirm] = useState(false);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -48,6 +50,10 @@ const UserSearch = () => {
 
   const handleTransfer = async (e) => {
     e.preventDefault();
+    setShowTransferConfirm(true);
+  };
+
+  const executeTransfer = async () => {
     
     try {
       // VULNERABLE: No CSRF protection
@@ -278,6 +284,18 @@ const UserSearch = () => {
           </div>
         </div>
       )}
+
+      {/* Transfer Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showTransferConfirm}
+        onClose={() => setShowTransferConfirm(false)}
+        onConfirm={executeTransfer}
+        title="Confirm Money Transfer"
+        message={`Are you sure you want to send $${transferAmount} to ${selectedUser?.full_name} (@${selectedUser?.username})?`}
+        confirmText="Send"
+        cancelText="Cancel"
+        type="warning"
+      />
     </div>
   );
 };

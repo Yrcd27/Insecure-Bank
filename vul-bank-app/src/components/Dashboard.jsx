@@ -8,12 +8,14 @@ import UserSearch from './UserSearch';
 import SystemTools from './SystemTools';
 import ProfileManager from './ProfileManager';
 import AdminPanel from './AdminPanel';
+import ConfirmModal from './ConfirmModal';
 
 const Dashboard = () => {
   const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [userBalance, setUserBalance] = useState(user?.balance || 0);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const refreshUserData = useCallback(async () => {
     try {
@@ -43,6 +45,10 @@ const Dashboard = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
   };
 
   const tabs = [
@@ -173,7 +179,7 @@ const Dashboard = () => {
         {/* Logout Button */}
         <div className="p-4 border-t border-blue-700">
           <button
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             className="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition duration-300 shadow-lg"
           >
             <LogOut className="w-5 h-5 mr-2" />
@@ -225,6 +231,18 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to logout? You will need to sign in again to access your account."
+        confirmText="Logout"
+        cancelText="Cancel"
+        type="warning"
+      />
     </div>
   );
 };

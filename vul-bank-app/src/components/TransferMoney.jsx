@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
 import { AlertTriangle } from 'lucide-react';
+import ConfirmModal from './ConfirmModal';
 
 const TransferMoney = () => {
   const { user } = useAuth();
@@ -11,6 +12,7 @@ const TransferMoney = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,6 +23,10 @@ const TransferMoney = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowConfirm(true);
+  };
+
+  const executeTransfer = async () => {
     setLoading(true);
     setMessage('');
 
@@ -154,6 +160,18 @@ const TransferMoney = () => {
           An attacker could create a malicious website that automatically transfers money when visited.
         </p>
       </div>
+
+      {/* Transfer Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={executeTransfer}
+        title="Confirm Transfer"
+        message={`Are you sure you want to transfer $${formData.amount} to ${formData.toUsername}?`}
+        confirmText="Transfer"
+        cancelText="Cancel"
+        type="warning"
+      />
     </div>
   );
 };
