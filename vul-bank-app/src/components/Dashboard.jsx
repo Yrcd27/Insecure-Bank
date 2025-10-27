@@ -136,60 +136,90 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-blue-900">InsecureBank</h1>
-              <span className="ml-4 text-gray-500">Dashboard</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Hello, {user.username}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Fixed Sidebar */}
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-linear-to-b from-blue-900 via-blue-800 to-indigo-900 shadow-xl z-40 flex flex-col">
+        {/* Logo/Brand */}
+        <div className="p-6 border-b border-blue-700">
+          <h1 className="text-2xl font-bold text-white">InsecureBank</h1>
+          <p className="text-blue-200 text-sm mt-1">Dashboard Portal</p>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3">
+          <ul className="space-y-1">
+            {tabs.map((tab) => (
+              <li key={tab.id}>
+                <button
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeTab === tab.id
+                      ? 'bg-white text-blue-900 shadow-lg'
+                      : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                  }`}
+                >
+                  <span className="mr-3 text-xl">{tab.icon}</span>
+                  <span>{tab.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Logout Button */}
+        <div className="p-4 border-t border-blue-700">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition duration-300 shadow-lg"
+          >
+            <span className="mr-2">🚪</span>
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 ml-64">
+        {/* Top Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+          <div className="px-6 py-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {tabs.find(t => t.id === activeTab)?.name || 'Dashboard'}
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  {activeTab === 'overview' && 'Your account overview and quick stats'}
+                  {activeTab === 'transfer' && 'Send money to other users securely'}
+                  {activeTab === 'history' && 'View all your past transactions'}
+                  {activeTab === 'search' && 'Find and connect with other users'}
+                  {activeTab === 'profile' && 'Manage your account information'}
+                  {activeTab === 'system' && 'System utilities and diagnostic tools'}
+                  {activeTab === 'admin' && 'Administrative controls and user management'}
+                </p>
+              </div>
+              <button 
+                onClick={() => setActiveTab('profile')}
+                className="flex items-center space-x-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition duration-200"
               >
-                Logout
+                <div className="bg-blue-100 p-3 rounded-full">
+                  <span className="text-2xl">👤</span>
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>
+                  <p className="text-xs text-gray-500">@{user.username}</p>
+                </div>
               </button>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className="lg:w-64">
-            <nav className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-              <ul className="space-y-2">
-                {tabs.map((tab) => (
-                  <li key={tab.id}>
-                    <button
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition duration-300 ${
-                        activeTab === tab.id
-                          ? 'bg-blue-100 text-blue-900'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      <span className="mr-3 text-lg">{tab.icon}</span>
-                      {tab.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+        {/* Content */}
+        <main className="p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[calc(100vh-180px)]">
+            {renderTabContent()}
           </div>
-
-          {/* Main Content */}
-          <div className="flex-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              {renderTabContent()}
-            </div>
-          </div>
-        </div>
+        </main>
       </div>
     </div>
   );
