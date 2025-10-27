@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
-import { AlertTriangle } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
 
 const TransferMoney = () => {
@@ -95,9 +94,6 @@ const TransferMoney = () => {
             value={formData.toUsername}
             onChange={handleChange}
           />
-          <p className="mt-1 text-sm text-gray-500">
-            Try: john_doe, jane_smith, bob_wilson, or admin
-          </p>
         </div>
 
         <div>
@@ -141,25 +137,6 @@ const TransferMoney = () => {
           {loading ? 'Processing...' : 'Transfer Money'}
         </button>
       </form>
-
-      {/* CSRF Attack Demo */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
-          <AlertTriangle className="w-5 h-5 mr-2" />
-          CSRF Vulnerability Demo
-        </h3>
-        <p className="text-sm text-yellow-700 mb-3">
-          This form is vulnerable to Cross-Site Request Forgery (CSRF) attacks because:
-        </p>
-        <ul className="text-sm text-yellow-700 list-disc list-inside space-y-1">
-          <li>No CSRF tokens are used</li>
-          <li>Cookies are not HttpOnly</li>
-          <li>CORS allows all origins</li>
-        </ul>
-        <p className="text-sm text-yellow-700 mt-3">
-          An attacker could create a malicious website that automatically transfers money when visited.
-        </p>
-      </div>
 
       {/* Transfer Confirmation Modal */}
       <ConfirmModal

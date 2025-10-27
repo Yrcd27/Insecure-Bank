@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
-import { Search as SearchIcon, User, AlertTriangle } from 'lucide-react';
+import { Search as SearchIcon, User } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
 
 const UserSearch = () => {
@@ -123,25 +123,6 @@ const UserSearch = () => {
           </div>
         </div>
       </form>
-
-      {/* XSS Vulnerability Demo */}
-      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-        <h3 className="font-semibold text-orange-800 mb-2 flex items-center">
-          <AlertTriangle className="w-5 h-5 mr-2" />
-          XSS Vulnerability Demo
-        </h3>
-        <p className="text-sm text-orange-700 mb-3">
-          This search is vulnerable to Cross-Site Scripting (XSS). Try searching for:
-        </p>
-        <div className="text-sm text-orange-700 bg-orange-100 p-2 rounded font-mono space-y-1">
-          <div>&lt;script&gt;alert('XSS')&lt;/script&gt;</div>
-          <div>&lt;img src=x onerror=alert('XSS')&gt;</div>
-          <div>&lt;svg onload=alert('XSS')&gt;</div>
-        </div>
-        <p className="text-sm text-orange-700 mt-2">
-          The server reflects user input without proper sanitization, allowing script injection.
-        </p>
-      </div>
 
       {hasSearched && (
         <div className="space-y-4">

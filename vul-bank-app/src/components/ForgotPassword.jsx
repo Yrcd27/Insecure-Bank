@@ -48,7 +48,7 @@ const ForgotPassword = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <Link to="/" className="flex justify-center">
-            <h2 className="text-3xl font-bold text-white">InsecureBank</h2>
+            <h2 className="text-3xl font-bold text-white">SecureBank</h2>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Reset your password
@@ -65,20 +65,6 @@ const ForgotPassword = () => {
         </div>
 
         <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20">
-          {/* Vulnerability Warning */}
-          <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded mb-6">
-            <h3 className="font-semibold mb-1 flex items-center">
-              <AlertTriangle className="w-4 h-4 mr-2" />
-              Security Vulnerabilities:
-            </h3>
-            <ul className="text-xs space-y-1">
-              <li>• User enumeration attack possible</li>
-              <li>• Username exposed in response</li>
-              <li>• No rate limiting for brute force</li>
-              <li>• Email existence disclosure</li>
-            </ul>
-          </div>
-
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded">
@@ -106,9 +92,6 @@ const ForgotPassword = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <p className="mt-1 text-xs text-blue-200">
-                Try testing with: admin@insecurebank.com, john@example.com, jane@example.com
-              </p>
             </div>
 
             <div>
@@ -121,16 +104,6 @@ const ForgotPassword = () => {
               </button>
             </div>
           </form>
-
-          {/* Educational Note */}
-          <div className="mt-6 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-md">
-            <h4 className="text-sm font-medium text-yellow-100 mb-2">Educational Demo:</h4>
-            <p className="text-xs text-yellow-200">
-              In a real application, the same success message should be shown regardless of whether 
-              the email exists, and no user information should be disclosed. Rate limiting and CAPTCHA 
-              should also be implemented.
-            </p>
-          </div>
         </div>
       </div>
     </div>

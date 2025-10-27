@@ -60,7 +60,7 @@ const LoginPage = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <Link to="/" className="flex justify-center">
-            <h2 className="text-3xl font-bold text-white">InsecureBank</h2>
+            <h2 className="text-3xl font-bold text-white">SecureBank</h2>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
             Sign in to your account
@@ -148,16 +148,6 @@ const LoginPage = () => {
               </button>
             </div>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-md">
-            <h4 className="text-sm font-medium text-yellow-100 mb-2">Demo Credentials:</h4>
-            <div className="text-xs text-yellow-200 space-y-1">
-              <div>Admin: admin / admin123</div>
-              <div>User 1: john_doe / password</div>
-              <div>User 2: jane_smith / 123456</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
