@@ -241,7 +241,7 @@ const Dashboard = () => {
         message="Are you sure you want to logout? You will need to sign in again to access your account."
         confirmText="Logout"
         cancelText="Cancel"
-        type="warning"
+        type="danger"
       />
     </div>
   );

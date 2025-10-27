@@ -294,7 +294,7 @@ const UserSearch = () => {
         message={`Are you sure you want to send $${transferAmount} to ${selectedUser?.full_name} (@${selectedUser?.username})?`}
         confirmText="Send"
         cancelText="Cancel"
-        type="warning"
+        type="success"
       />
     </div>
   );

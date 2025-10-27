@@ -21,6 +21,12 @@ const ConfirmModal = ({
           iconBg: 'bg-red-100',
           button: 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
         };
+      case 'success':
+        return {
+          icon: <Info className="w-6 h-6 text-green-600" />,
+          iconBg: 'bg-green-100',
+          button: 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+        };
       case 'info':
         return {
           icon: <Info className="w-6 h-6 text-blue-600" />,
@@ -39,7 +45,7 @@ const ConfirmModal = ({
   const styles = getTypeStyles();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
         <div className="flex items-start space-x-4">
           <div className={`${styles.iconBg} rounded-full p-3 shrink-0`}>

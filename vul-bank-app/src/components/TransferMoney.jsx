@@ -170,7 +170,7 @@ const TransferMoney = () => {
         message={`Are you sure you want to transfer $${formData.amount} to ${formData.toUsername}?`}
         confirmText="Transfer"
         cancelText="Cancel"
-        type="warning"
+        type="success"
       />
     </div>
   );
