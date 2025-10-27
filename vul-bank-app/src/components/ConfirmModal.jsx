@@ -45,7 +45,7 @@ const ConfirmModal = ({
   const styles = getTypeStyles();
 
   return (
-    <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-gray-900/20 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
         <div className="flex items-start space-x-4">
           <div className={`${styles.iconBg} rounded-full p-3 shrink-0`}>
