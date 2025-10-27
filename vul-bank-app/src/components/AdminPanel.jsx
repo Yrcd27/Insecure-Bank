@@ -169,6 +169,27 @@ const AdminPanel = () => {
         </div>
       )}
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-semibold text-blue-800 mb-2">Total Users</h4>
+          <div className="text-2xl font-bold text-blue-900">{users.length}</div>
+        </div>
+        
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h4 className="font-semibold text-green-800 mb-2">Total Balance</h4>
+          <div className="text-2xl font-bold text-green-900">
+            ${users.reduce((sum, user) => sum + (parseFloat(user.balance) || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+        </div>
+        
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h4 className="font-semibold text-yellow-800 mb-2">Average Balance</h4>
+          <div className="text-2xl font-bold text-yellow-900">
+            ${users.length > 0 ? (users.reduce((sum, user) => sum + (parseFloat(user.balance) || 0), 0) / users.length).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -253,27 +274,6 @@ const AdminPanel = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-semibold text-blue-800 mb-2">Total Users</h4>
-          <div className="text-2xl font-bold text-blue-900">{users.length}</div>
-        </div>
-        
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h4 className="font-semibold text-green-800 mb-2">Total Balance</h4>
-          <div className="text-2xl font-bold text-green-900">
-            ${users.reduce((sum, user) => sum + (parseFloat(user.balance) || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </div>
-        </div>
-        
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <h4 className="font-semibold text-yellow-800 mb-2">Average Balance</h4>
-          <div className="text-2xl font-bold text-yellow-900">
-            ${users.length > 0 ? (users.reduce((sum, user) => sum + (parseFloat(user.balance) || 0), 0) / users.length).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
-          </div>
         </div>
       </div>
 
