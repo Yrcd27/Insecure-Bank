@@ -144,8 +144,7 @@ const AdminPanel = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Admin Panel</h2>
+      <div className="flex justify-end items-center">
         <button
           onClick={fetchAllUsers}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"

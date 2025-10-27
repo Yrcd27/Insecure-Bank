@@ -40,8 +40,6 @@ const SystemTools = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">System Tools</h2>
-
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Network Ping Tool</h3>
         

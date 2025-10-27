@@ -90,8 +90,6 @@ const UserSearch = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Search Users</h2>
-
       <form onSubmit={handleSearch} className="space-y-4">
         <div>
           <label htmlFor="searchQuery" className="block text-sm font-medium text-gray-700">

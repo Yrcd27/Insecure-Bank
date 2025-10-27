@@ -62,8 +62,6 @@ const TransferMoney = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Transfer Money</h2>
-      
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h3 className="font-semibold text-blue-900 mb-2">Available Balance</h3>
         <p className="text-2xl font-bold text-blue-800">${user.balance?.toLocaleString() || '0'}</p>

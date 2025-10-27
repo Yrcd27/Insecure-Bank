@@ -62,8 +62,6 @@ const ProfileManager = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Profile Management</h2>
-
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <div className="flex items-center space-x-4 mb-6">
           <div className="bg-blue-100 p-4 rounded-full">
