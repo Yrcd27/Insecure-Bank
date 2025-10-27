@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { AlertTriangle } from 'lucide-react';
 
 const LandingPage = () => {
   const [landingData, setLandingData] = useState(null);
@@ -129,7 +130,11 @@ const LandingPage = () => {
       <footer className="bg-black/20 border-t border-white/20 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-blue-100">
-            <p>&copy; 2025 InsecureBank. All rights reserved. ⚠️ Educational Demo Only</p>
+            <p className="flex items-center justify-center">
+              &copy; 2025 InsecureBank. All rights reserved.
+              <AlertTriangle className="w-4 h-4 ml-2 mr-1" />
+              Educational Demo Only
+            </p>
             <p className="mt-2 text-sm">Educational Purpose Only - Contains Intentional Vulnerabilities</p>
           </div>
         </div>

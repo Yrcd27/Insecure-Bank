@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/useAuth';
+import { User, AlertTriangle, Info } from 'lucide-react';
 
 const ProfileManager = () => {
   const { user, updateUser } = useAuth();
@@ -59,7 +60,10 @@ const ProfileManager = () => {
 
       {/* Stored XSS Vulnerability Demo */}
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-        <h3 className="font-semibold text-purple-800 mb-2">🚨 Stored XSS Vulnerability Demo</h3>
+        <h3 className="font-semibold text-purple-800 mb-2 flex items-center">
+          <AlertTriangle className="w-5 h-5 mr-2" />
+          Stored XSS Vulnerability Demo
+        </h3>
         <p className="text-sm text-purple-700 mb-3">
           Profile fields are vulnerable to stored XSS. Try entering malicious scripts:
         </p>
@@ -76,7 +80,7 @@ const ProfileManager = () => {
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <div className="flex items-center space-x-4 mb-6">
           <div className="bg-blue-100 p-4 rounded-full">
-            <span className="text-3xl">👤</span>
+            <User className="w-8 h-8 text-blue-600" />
           </div>
           <div>
             <h3 className="text-xl font-semibold text-gray-900">
@@ -152,7 +156,10 @@ const ProfileManager = () => {
 
       {/* XSS Test Examples */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <h3 className="font-semibold text-yellow-800 mb-2">⚠️ Stored XSS Test Examples</h3>
+        <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+          <AlertTriangle className="w-5 h-5 mr-2" />
+          Stored XSS Test Examples
+        </h3>
         <p className="text-sm text-yellow-700 mb-3">
           Click to populate fields with XSS payloads (Educational purposes only):
         </p>
@@ -186,7 +193,10 @@ const ProfileManager = () => {
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-800 mb-2">ℹ️ Security Note</h3>
+        <h3 className="font-semibold text-blue-800 mb-2 flex items-center">
+          <Info className="w-5 h-5 mr-2" />
+          Security Note
+        </h3>
         <p className="text-sm text-blue-700">
           In a secure application, all user input should be sanitized before storage and escaped before display.
           This prevents stored XSS attacks where malicious scripts are permanently stored and executed for all users.

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { Home, Send, FileText, Search, User, Wrench, Settings, CreditCard, CheckCircle, Star, AlertTriangle, LogOut } from 'lucide-react';
 import TransferMoney from './TransferMoney';
 import TransactionHistory from './TransactionHistory';
 import UserSearch from './UserSearch';
@@ -45,17 +46,17 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'overview', name: 'Overview', icon: '🏠' },
-    { id: 'transfer', name: 'Transfer Money', icon: '💸' },
-    { id: 'history', name: 'Transaction History', icon: '📋' },
-    { id: 'search', name: 'Search Users', icon: '🔍' },
-    { id: 'profile', name: 'Profile', icon: '👤' },
-    { id: 'system', name: 'System Tools', icon: '🔧' }
+    { id: 'overview', name: 'Overview', icon: Home },
+    { id: 'transfer', name: 'Transfer Money', icon: Send },
+    { id: 'history', name: 'Transaction History', icon: FileText },
+    { id: 'search', name: 'Search Users', icon: Search },
+    { id: 'profile', name: 'Profile', icon: User },
+    { id: 'system', name: 'System Tools', icon: Wrench }
   ];
 
   // Add admin tab for admin users
   if (user?.username === 'admin') {
-    tabs.push({ id: 'admin', name: 'Admin Panel', icon: '⚙️' });
+    tabs.push({ id: 'admin', name: 'Admin Panel', icon: Settings });
   }
 
   const renderTabContent = () => {
@@ -77,7 +78,7 @@ const Dashboard = () => {
                     <p className="text-2xl font-bold text-gray-900">****{user.id.toString().padStart(4, '0')}</p>
                   </div>
                   <div className="bg-blue-100 p-3 rounded-full">
-                    <span className="text-2xl">💳</span>
+                    <CreditCard className="w-6 h-6 text-blue-600" />
                   </div>
                 </div>
               </div>
@@ -89,7 +90,7 @@ const Dashboard = () => {
                     <p className="text-2xl font-bold text-gray-900">Checking</p>
                   </div>
                   <div className="bg-green-100 p-3 rounded-full">
-                    <span className="text-2xl">✅</span>
+                    <CheckCircle className="w-6 h-6 text-green-600" />
                   </div>
                 </div>
               </div>
@@ -101,7 +102,7 @@ const Dashboard = () => {
                     <p className="text-2xl font-bold text-green-600">Active</p>
                   </div>
                   <div className="bg-yellow-100 p-3 rounded-full">
-                    <span className="text-2xl">⭐</span>
+                    <Star className="w-6 h-6 text-yellow-600" />
                   </div>
                 </div>
               </div>
@@ -109,7 +110,7 @@ const Dashboard = () => {
 
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
               <div className="flex items-center">
-                <span className="text-2xl mr-3">⚠️</span>
+                <AlertTriangle className="w-8 h-8 text-yellow-600 mr-3" />
                 <div>
                   <h3 className="text-lg font-semibold text-yellow-800">Educational Demo</h3>
                   <p className="text-yellow-700">This application contains intentional security vulnerabilities for learning purposes.</p>
@@ -148,21 +149,24 @@ const Dashboard = () => {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-3">
           <ul className="space-y-1">
-            {tabs.map((tab) => (
-              <li key={tab.id}>
-                <button
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    activeTab === tab.id
-                      ? 'bg-white text-blue-900 shadow-lg'
-                      : 'text-blue-100 hover:bg-blue-800 hover:text-white'
-                  }`}
-                >
-                  <span className="mr-3 text-xl">{tab.icon}</span>
-                  <span>{tab.name}</span>
-                </button>
-              </li>
-            ))}
+            {tabs.map((tab) => {
+              const IconComponent = tab.icon;
+              return (
+                <li key={tab.id}>
+                  <button
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      activeTab === tab.id
+                        ? 'bg-white text-blue-900 shadow-lg'
+                        : 'text-blue-100 hover:bg-blue-800 hover:text-white'
+                    }`}
+                  >
+                    <IconComponent className="w-5 h-5 mr-3" />
+                    <span>{tab.name}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -172,7 +176,7 @@ const Dashboard = () => {
             onClick={handleLogout}
             className="w-full flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition duration-300 shadow-lg"
           >
-            <span className="mr-2">🚪</span>
+            <LogOut className="w-5 h-5 mr-2" />
             Logout
           </button>
         </div>
@@ -203,7 +207,7 @@ const Dashboard = () => {
                 className="flex items-center space-x-3 hover:bg-gray-50 px-3 py-2 rounded-lg transition duration-200"
               >
                 <div className="bg-blue-100 p-3 rounded-full">
-                  <span className="text-2xl">👤</span>
+                  <User className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="text-left">
                   <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>

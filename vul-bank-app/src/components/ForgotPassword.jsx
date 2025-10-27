@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AlertTriangle } from 'lucide-react';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -66,7 +67,10 @@ const ForgotPassword = () => {
         <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20">
           {/* Vulnerability Warning */}
           <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded mb-6">
-            <h3 className="font-semibold mb-1">🚨 Security Vulnerabilities:</h3>
+            <h3 className="font-semibold mb-1 flex items-center">
+              <AlertTriangle className="w-4 h-4 mr-2" />
+              Security Vulnerabilities:
+            </h3>
             <ul className="text-xs space-y-1">
               <li>• User enumeration attack possible</li>
               <li>• Username exposed in response</li>

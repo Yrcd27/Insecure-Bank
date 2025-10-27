@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { ArrowDown, ArrowUp, Send, DollarSign, AlertTriangle, FileText } from 'lucide-react';
 
 const TransactionHistory = ({ userId }) => {
   const [transactions, setTransactions] = useState([]);
@@ -43,13 +44,13 @@ const TransactionHistory = ({ userId }) => {
   const getTransactionIcon = (type) => {
     switch (type) {
       case 'deposit':
-        return '⬇️';
+        return <ArrowDown className="w-6 h-6 text-green-600" />;
       case 'withdraw':
-        return '⬆️';
+        return <ArrowUp className="w-6 h-6 text-red-600" />;
       case 'transfer':
-        return '💸';
+        return <Send className="w-6 h-6 text-blue-600" />;
       default:
-        return '💰';
+        return <DollarSign className="w-6 h-6 text-gray-600" />;
     }
   };
 
@@ -81,7 +82,10 @@ const TransactionHistory = ({ userId }) => {
 
       {/* IDOR Vulnerability Demo */}
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <h3 className="font-semibold text-red-800 mb-2">🚨 IDOR Vulnerability Demo</h3>
+        <h3 className="font-semibold text-red-800 mb-2 flex items-center">
+          <AlertTriangle className="w-5 h-5 mr-2" />
+          IDOR Vulnerability Demo
+        </h3>
         <p className="text-sm text-red-700 mb-3">
           Try changing the URL to see other users' transactions:
         </p>
@@ -96,7 +100,7 @@ const TransactionHistory = ({ userId }) => {
       <div className="space-y-4">
         {transactions.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            <span className="text-4xl block mb-2">📋</span>
+            <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             No transactions found
           </div>
         ) : (
@@ -104,7 +108,7 @@ const TransactionHistory = ({ userId }) => {
             <div key={transaction.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="text-2xl">
+                  <div className="flex items-center justify-center">
                     {getTransactionIcon(transaction.type)}
                   </div>
                   <div>
