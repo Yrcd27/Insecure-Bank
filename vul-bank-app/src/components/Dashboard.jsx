@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Home, Send, FileText, Search, User, Wrench, Settings, CreditCard, CheckCircle, Star, AlertTriangle, LogOut } from 'lucide-react';
+import { Home, Send, FileText, Search, User, Wrench, Settings, CreditCard, CheckCircle, Star, LogOut } from 'lucide-react';
 import TransferMoney from './TransferMoney';
 import TransactionHistory from './TransactionHistory';
 import UserSearch from './UserSearch';
@@ -110,16 +110,6 @@ const Dashboard = () => {
                   <div className="bg-yellow-100 p-3 rounded-full">
                     <Star className="w-6 h-6 text-yellow-600" />
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-              <div className="flex items-center">
-                <AlertTriangle className="w-8 h-8 text-yellow-600 mr-3" />
-                <div>
-                  <h3 className="text-lg font-semibold text-yellow-800">Educational Demo</h3>
-                  <p className="text-yellow-700">This application contains intentional security vulnerabilities for learning purposes.</p>
                 </div>
               </div>
             </div>
