@@ -199,14 +199,14 @@ const AdminPanel = () => {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <h4 className="font-semibold text-green-800 mb-2">Total Balance</h4>
           <div className="text-2xl font-bold text-green-900">
-            ${users.reduce((sum, user) => sum + (user.balance || 0), 0).toLocaleString()}
+            ${users.reduce((sum, user) => sum + (parseFloat(user.balance) || 0), 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
         
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <h4 className="font-semibold text-yellow-800 mb-2">Average Balance</h4>
           <div className="text-2xl font-bold text-yellow-900">
-            ${users.length > 0 ? Math.round(users.reduce((sum, user) => sum + (user.balance || 0), 0) / users.length).toLocaleString() : '0'}
+            ${users.length > 0 ? (users.reduce((sum, user) => sum + (parseFloat(user.balance) || 0), 0) / users.length).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
           </div>
         </div>
       </div>
