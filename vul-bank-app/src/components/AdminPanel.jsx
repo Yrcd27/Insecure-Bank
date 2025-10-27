@@ -5,6 +5,15 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    fullName: '',
+    email: '',
+    balance: ''
+  });
+  const [editMessage, setEditMessage] = useState('');
 
   const fetchAllUsers = useCallback(async () => {
     try {
@@ -56,6 +65,58 @@ const AdminPanel = () => {
       }
     } catch {
       setDeleteMessage('Network error occurred');
+    }
+  };
+
+  const handleViewUser = (user) => {
+    setSelectedUser(user);
+    setShowViewModal(true);
+  };
+
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setEditFormData({
+      fullName: user.full_name,
+      email: user.email,
+      balance: user.balance
+    });
+    setEditMessage('');
+    setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditMessage('');
+
+    try {
+      // VULNERABLE: No authorization check - IDOR
+      const response = await fetch(`http://localhost:5000/api/profile/${selectedUser.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          fullName: editFormData.fullName,
+          email: editFormData.email
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setEditMessage('User updated successfully!');
+        // Refresh user list
+        fetchAllUsers();
+        setTimeout(() => {
+          setShowEditModal(false);
+          setEditMessage('');
+        }, 2000);
+      } else {
+        setEditMessage(result.message || 'Update failed');
+      }
+    } catch {
+      setEditMessage('Network error occurred');
     }
   };
 
@@ -170,10 +231,16 @@ const AdminPanel = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900 text-xs bg-blue-100 px-2 py-1 rounded">
+                    <button 
+                      onClick={() => handleViewUser(user)}
+                      className="text-blue-600 hover:text-blue-900 text-xs bg-blue-100 hover:bg-blue-200 px-2 py-1 rounded transition duration-300"
+                    >
                       View
                     </button>
-                    <button className="text-green-600 hover:text-green-900 text-xs bg-green-100 px-2 py-1 rounded">
+                    <button 
+                      onClick={() => handleEditUser(user)}
+                      className="text-green-600 hover:text-green-900 text-xs bg-green-100 hover:bg-green-200 px-2 py-1 rounded transition duration-300"
+                    >
                       Edit
                     </button>
                     <button 
@@ -220,6 +287,172 @@ const AdminPanel = () => {
           <li>• <strong>Stored XSS:</strong> User input displayed without sanitization</li>
         </ul>
       </div>
+
+      {/* View User Modal */}
+      {showViewModal && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">User Details</h3>
+              <button
+                onClick={() => setShowViewModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">User ID</p>
+                  <p className="font-semibold text-gray-900">{selectedUser.id}</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">Username</p>
+                  <p className="font-semibold text-gray-900">{selectedUser.username}</p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Full Name</p>
+                <p className="font-semibold text-gray-900">{selectedUser.full_name}</p>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Email Address</p>
+                <p className="font-semibold text-gray-900">{selectedUser.email}</p>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Account Balance</p>
+                <p className="font-semibold text-2xl text-green-600">
+                  ${parseFloat(selectedUser.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Account Created</p>
+                <p className="font-semibold text-gray-900">
+                  {selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleString() : 'N/A'}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 bg-red-50 border border-red-200 p-3 rounded-lg">
+              <p className="text-sm text-red-700">
+                <strong>⚠️ IDOR Vulnerability:</strong> This data is accessible without proper authorization checks.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowViewModal(false)}
+              className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {showEditModal && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Edit User</h3>
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-gray-600">Editing user:</p>
+              <p className="font-semibold text-gray-900">{selectedUser.username}</p>
+              <p className="text-xs text-gray-500">ID: {selectedUser.id}</p>
+            </div>
+
+            {editMessage && (
+              <div className={`mb-4 p-3 rounded ${
+                editMessage.includes('successfully')
+                  ? 'bg-green-50 text-green-700 border border-green-200'
+                  : 'bg-red-50 text-red-700 border border-red-200'
+              }`}>
+                {editMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="editFullName" className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="editFullName"
+                  required
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  value={editFormData.fullName}
+                  onChange={(e) => setEditFormData({ ...editFormData, fullName: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="editEmail" className="block text-sm font-medium text-gray-700">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="editEmail"
+                  required
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="editBalance" className="block text-sm font-medium text-gray-700">
+                  Balance (Read Only)
+                </label>
+                <input
+                  type="text"
+                  id="editBalance"
+                  disabled
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+                  value={`$${parseFloat(editFormData.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                />
+                <p className="mt-1 text-xs text-gray-500">Balance cannot be modified directly</p>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                <p className="text-xs text-yellow-700">
+                  <strong>⚠️ Vulnerability:</strong> No authorization check - IDOR exploit possible
+                </p>
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
